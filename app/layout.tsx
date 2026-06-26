@@ -3,6 +3,7 @@ import { serifFont, sansFont } from "@/lib/fonts";
 import { getWeddingData } from "@/lib/storage/wedding-store";
 import { getCoupleDisplayName } from "@/lib/helpers/getCoupleDisplayName";
 import { getCoupleInitials } from "@/lib/helpers/getCoupleInitials";
+import { getSiteUrl } from "@/lib/helpers/getSiteUrl";
 import "./globals.css";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +11,7 @@ export const dynamic = "force-dynamic";
 export const generateMetadata = async (): Promise<Metadata> => {
   const data = await getWeddingData();
   const coupleName = getCoupleDisplayName(data.couple);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = getSiteUrl();
 
   return {
     title: data.seo.title,

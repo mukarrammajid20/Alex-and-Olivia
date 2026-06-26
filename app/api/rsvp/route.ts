@@ -42,7 +42,7 @@ export const POST = async (request: Request) => {
       );
     }
 
-    const store = getRsvpStore();
+    const store = await getRsvpStore();
     const existing = await store.findByContact(parsed.data.contact);
 
     if (existing) {

@@ -8,7 +8,8 @@ export const GET = async () => {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const rsvps = await getRsvpStore().getAll();
+  const store = await getRsvpStore();
+  const rsvps = await store.getAll();
   const totalGuests = rsvps.reduce((sum, r) => sum + r.guestCount, 0);
 
   return NextResponse.json({ rsvps, totalGuests });

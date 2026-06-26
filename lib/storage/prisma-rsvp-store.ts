@@ -1,22 +1,11 @@
-import { PrismaClient } from "@prisma/client";
 import { randomUUID } from "crypto";
+import { getPrismaClient } from "@/lib/helpers/getPrismaClient";
 import type { RsvpStore } from "./rsvp-store";
 import type { RsvpFormData } from "@/lib/validations/rsvp";
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
-
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
-  });
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
-
 export const prismaRsvpStore: RsvpStore = {
   create: async (data: RsvpFormData, ipAddress?: string) => {
+    const prisma = getPrismaClient();
     const submission = await prisma.rsvp.create({
       data: {
         id: randomUUID(),
@@ -42,6 +31,7 @@ export const prismaRsvpStore: RsvpStore = {
     };
   },
   getAll: async () => {
+    const prisma = getPrismaClient();
     const submissions = await prisma.rsvp.findMany({
       orderBy: { submittedAt: "desc" },
     });
@@ -58,6 +48,7 @@ export const prismaRsvpStore: RsvpStore = {
     }));
   },
   findByContact: async (contact: string) => {
+    const prisma = getPrismaClient();
     const submission = await prisma.rsvp.findFirst({
       where: { contact: { equals: contact, mode: "insensitive" } },
     });
